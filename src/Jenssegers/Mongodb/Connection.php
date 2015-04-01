@@ -157,7 +157,7 @@ class Connection extends \Illuminate\Database\Connection {
         extract($config);
 
         // Treat host option as array of hosts
-        $hosts = is_array($config['host']) ? $config['host'] : array($config['host']);
+        $hosts = is_array($config['host']) ? $config['host'] : array($config['hosts']);
 
         // Add ports to hosts
         foreach ($hosts as &$host)
