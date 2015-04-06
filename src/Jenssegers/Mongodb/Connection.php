@@ -154,23 +154,21 @@ class Connection extends \Illuminate\Database\Connection {
         // First we will create the basic DSN setup as well as the port if it is in
         // in the configuration options. This will give us the basic DSN we will
         // need to establish the MongoClient and return them back for use.
-        extract($config);
 
         // Treat host option as array of hosts
-        $hosts = is_array($config['host']) ? $config['host'] : array($config['hosts']);
+        $config_hosts = in_array('host', $config) ? array($config['host']) : $config['hosts'];
+        $config_db = $config['database'];
 
         // Add ports to hosts
-        foreach ($hosts as &$host)
+        $hosts = array();
+        foreach ($config_hosts as $pair)
         {
-            if (isset($config['port']))
-            {
-                $host = "{$host}:{$port}";
-            }
+            $hosts[] = $pair['host'] . ":" . $pair['port'];
         }
 
         // The database name needs to be in the connection string, otherwise it will
         // authenticate to the admin database, which may result in permission errors.
-        return "mongodb://" . implode(',', $hosts) . "/{$database}";
+        return "mongodb://" . implode(',', $hosts) . "/{$config_db}";
     }
 
     /**
